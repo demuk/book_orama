@@ -1,19 +1,79 @@
-from flask import render_template, redirect, url_for, request
-from app import app
+from datetime import datetime
+import os
+
+from flask import render_template, redirect, url_for, request, flash
+from werkzeug.urls import url_parse
+from app import app, db
+from flask_login import current_user, login_user, login_required, logout_user
+from app.models import User
+from app.forms import LoginForm, RegistrationForm
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 @app.route('/')
 @app.route('/home')
+@login_required
 def home():
     return render_template('index.html')
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template('register.html')
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    if request.method == 'POST':
+        user = User(username=request.form['username'],email=request.form['email'],password_hash=generate_password_hash(request.form['password']))
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register')
 
 
-@app.route('/login')
+@app.route('/login', methods=['POST', 'GET'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    if request.method == 'POST':
+        user = User.query.filter_by(username=request.form['username']).first()
+        if user:
+            if check_password_hash(user.password_hash, request.form['password']):
+                login_user(user, remember=True)
+            return redirect(url_for('home'))
+        flash('invalid Username or Password')
+        return redirect(url_for('login'))
     return render_template('login.html')
 
+
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template('profile.html', user=user)
+
+
+app.config['IMAGE_UPLOADS'] = '/home/kiptoo/Desktop/book_orama/app/static/img'
+
+
+@app.route('/upload', methods=['POST','GET'])
+@login_required
+def upload():
+    if request.method == 'POST':
+        if request.files:
+            image = request.files['image']
+            image.save(os.path.join(app.config['IMAGE_UPLOADS'], image.filename))
+
+            return redirect(request.url)
+    return render_template('uploadpic.html')
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+        db.session.commit()
