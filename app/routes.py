@@ -1,3 +1,4 @@
+import base64
 from datetime import datetime
 import os
 
@@ -22,11 +23,15 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     if request.method == 'POST':
-        user = User(username=request.form['username'],email=request.form['email'],password_hash=generate_password_hash(request.form['password']))
-        db.session.add(user)
-        db.session.commit()
-        flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('login'))
+        if request.files:
+            image = request.files['image']
+            bytez = image.read()
+            user = User(username=request.form['username'],email=request.form['email'],prof_data=base64.b64encode(bytez).decode('utf-8'),
+                        password_hash=generate_password_hash(request.form['password']))
+            db.session.add(user)
+            db.session.commit()
+            flash('Congratulations, you are now a registered user!')
+            return redirect(url_for('login'))
     return render_template('register.html', title='Register')
 
 
@@ -49,22 +54,30 @@ def login():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
+
     return render_template('profile.html', user=user)
 
 
 app.config['IMAGE_UPLOADS'] = '/home/kiptoo/Desktop/book_orama/app/static/img'
 
 
-@app.route('/upload', methods=['POST','GET'])
+@app.route('/editprof', methods=['POST','GET'])
 @login_required
-def upload():
+def editprof():
     if request.method == 'POST':
-        if request.files:
-            image = request.files['image']
-            image.save(os.path.join(app.config['IMAGE_UPLOADS'], image.filename))
+        updates = User(username=request.form['username'],first_name = request.form['first_name'],last_name = request.form['last_name'],email = request.form['email'],
+            about_me = request.form['bio'])
+        db.session.add(updates)
+        db.session.commit()
 
-            return redirect(request.url)
-    return render_template('uploadpic.html')
+        flash('profile changed')
+    return render_template('editprof.html', user=user)
+
+
+@app.route('/images', methods=['POST','GET'])
+def images():
+
+    return render_template('myimages.html', my_image=my_image)
 
 
 @app.route('/logout')
