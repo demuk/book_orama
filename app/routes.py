@@ -74,7 +74,7 @@ def editprof(id):
         user.about_me = request.form['bio']
         db.session.commit()
         flash('profile changed')
-    return render_template('editprof.html')
+    return render_template('profile.html')
 
 
 @app.route('/addbook', methods=['POST', 'GET'])
