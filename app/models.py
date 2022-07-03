@@ -8,13 +8,13 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     first_name = db.Column(db.String(64))
-    last_name =db.Column(db.String(64))
+    last_name = db.Column(db.String(64))
     email = db.Column(db.String(120), index=True, unique=True)
     prof_data = db.Column(db.LargeBinary)
     password_hash = db.Column(db.String(128))
     about_me = db.Column(db.String(140))
-    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-    my_books = db.relationship('Book', backref='author', lazy='dynamic')
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow())
+    books = db.relationship('Book', backref='author', lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
