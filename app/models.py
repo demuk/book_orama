@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(128))
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow())
-    books = db.relationship('Book', backref='author', lazy='dynamic')
+    libraries= db.relationship('Library', backref='owner', lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -30,6 +30,13 @@ class User(db.Model, UserMixin):
 def load_user(id):
     return User.query.get(int(id))
 
+class Library(db.Model):
+     id = db.Column(db.Integer, primary_key=True)
+     name=db.Column(db.String(255))
+     location=db.Column(db.String(255))
+     user_id=db.Column(db.Integer(),db.ForeignKey('user.id'))
+     books=db.relationship('Book',backref='library',lazy='dynamic')
+
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -38,7 +45,8 @@ class Book(db.Model):
     genre = db.Column(db.String(64))
     year = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    library_id = db.Column(db.Integer, db.ForeignKey('library.id'))
 
     def __repr__(self):
         return '<Post {}>'.format(self.title)
+

@@ -51,12 +51,13 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/user/<username>')
+@app.route('/user/<int:id>')
 @login_required
-def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
+def user(id):
+    user = User.query.filter_by(id=id).first_or_404()
+    time=datetime.utcnow()
 
-    return render_template('profile.html', user=user)
+    return render_template('profile.html', user=user,time=time)
 
 
 app.config['IMAGE_UPLOADS'] = '/home/kiptoo/Desktop/book_orama/app/static/img'
@@ -65,8 +66,9 @@ app.config['IMAGE_UPLOADS'] = '/home/kiptoo/Desktop/book_orama/app/static/img'
 @app.route('/editprof/<int:id>', methods=['POST', 'GET'])
 @login_required
 def editprof(id):
+    user = User.query.get(id)
     if request.method == 'POST':
-        user = User.query.get(id)
+        
         user.username = request.form['username']
         user.first_name = request.form['first_name']
         user.last_name = request.form['last_name']
@@ -74,7 +76,21 @@ def editprof(id):
         user.about_me = request.form['bio']
         db.session.commit()
         flash('profile changed')
-    return render_template('profile.html')
+        return redirect(url_for('user',id=id))
+    return render_template('editprof.html',user=user)
+
+@app.route('/add_library',methods=['GET','POST'])
+@login_required
+def add_lib():
+    if request.method=='POST':
+        name=request.form['lib_name']
+        location=request.form['lib_location']
+        user_id=current_user.id
+        library=Library(name=name,location=location,user_id=user_id)
+        db.session.add(library)
+        db.session.commit()
+        flash('library added successfully')
+        return redirect(url_for('home'))
 
 
 @app.route('/addbook', methods=['POST', 'GET'])
@@ -94,13 +110,13 @@ def addbook():
 
 
 @app.route('/logout')
+@login_required
 def logout():
+    current_user.last_seen = datetime.utcnow()
+    db.session.commit()
     logout_user()
     return redirect(url_for('home'))
 
 
-@app.before_request
-def before_request():
-    if current_user.is_authenticated:
-        current_user.last_seen = datetime.utcnow()
-        db.session.commit()
+
+       
