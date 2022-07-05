@@ -6,7 +6,7 @@ from flask import render_template, redirect, url_for, request, flash
 from werkzeug.urls import url_parse
 from app import app, db
 from flask_login import current_user, login_user, login_required, logout_user
-from app.models import User, Book
+from app.models import User, Book, Library
 from app.forms import LoginForm, RegistrationForm
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -15,7 +15,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 @app.route('/home')
 @login_required
 def home():
-    return render_template('index.html')
+    library = Library.query.all()
+    return render_template('index.html', library=library)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -27,7 +28,6 @@ def register():
             image = request.files['image']
             bytez = image.read()
             user = User(username=request.form['username'], email=request.form['email'],
-                        prof_data=base64.b64encode(bytez).decode('utf-8'),
                         password_hash=generate_password_hash(request.form['password']))
             db.session.add(user)
             db.session.commit()
@@ -55,9 +55,9 @@ def login():
 @login_required
 def user(id):
     user = User.query.filter_by(id=id).first_or_404()
-    time=datetime.utcnow()
+    time = datetime.utcnow()
 
-    return render_template('profile.html', user=user,time=time)
+    return render_template('profile.html', user=user, time=time)
 
 
 app.config['IMAGE_UPLOADS'] = '/home/kiptoo/Desktop/book_orama/app/static/img'
@@ -68,7 +68,6 @@ app.config['IMAGE_UPLOADS'] = '/home/kiptoo/Desktop/book_orama/app/static/img'
 def editprof(id):
     user = User.query.get(id)
     if request.method == 'POST':
-        
         user.username = request.form['username']
         user.first_name = request.form['first_name']
         user.last_name = request.form['last_name']
@@ -76,21 +75,23 @@ def editprof(id):
         user.about_me = request.form['bio']
         db.session.commit()
         flash('profile changed')
-        return redirect(url_for('user',id=id))
-    return render_template('editprof.html',user=user)
+        return redirect(url_for('user', id=id))
+    return render_template('editprof.html', user=user)
 
-@app.route('/add_library',methods=['GET','POST'])
+
+@app.route('/add_library', methods=['GET', 'POST'])
 @login_required
 def add_lib():
-    if request.method=='POST':
-        name=request.form['lib_name']
-        location=request.form['lib_location']
-        user_id=current_user.id
-        library=Library(name=name,location=location,user_id=user_id)
+    if request.method == 'POST':
+        name = request.form['lib_name']
+        location = request.form['lib_location']
+        user_id = current_user.id
+        library = Library(name=name, location=location, user_id=current_user.id)
         db.session.add(library)
         db.session.commit()
         flash('library added successfully')
         return redirect(url_for('home'))
+    return render_template('addlib.html')
 
 
 @app.route('/addbook', methods=['POST', 'GET'])
@@ -116,7 +117,3 @@ def logout():
     db.session.commit()
     logout_user()
     return redirect(url_for('home'))
-
-
-
-       
