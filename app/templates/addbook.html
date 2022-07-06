@@ -48,6 +48,18 @@
             <form action="{{url_for('addbook')}}" method="post" enctype="multipart/form-data">
 
               <div class="form-floating mb-3">
+
+                <select name="lib_id" class="form-select" aria-label="Default select example">
+                      <option selected>Select Library</option>
+                      {%for lib in libraries%}
+                      <option value="{{lib.id}}">{{lib.name}}</option>
+                      {%endfor%}
+                     
+              </select>
+
+              </div>
+
+              <div class="form-floating mb-3">
                 <input type="text" name="title" class="form-control" id="floatingInputUsername" placeholder="Title" required autofocus>
                 <label for="floatingInputUsername">Title</label>
               </div>
