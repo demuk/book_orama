@@ -16,7 +16,20 @@ from werkzeug.security import generate_password_hash, check_password_hash
 @login_required
 def home():
     library = Library.query.all()
+    
     return render_template('index.html', library=library)
+
+
+@app.route('/library/<int:id>')
+@login_required
+def library(id):
+    library = Library.query.get(id)
+    count = Book.query.filter_by(library_id=id).count()
+    user = User.query.all()
+    return render_template('library.html', library=library, count=count)
+
+
+
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -97,17 +110,18 @@ def add_lib():
 @app.route('/addbook', methods=['POST', 'GET'])
 @login_required
 def addbook():
+    libraries=Library.query.filter_by(user_id=current_user.id)
     if request.method == 'POST':
         if request.files:
             image = request.files['image']
             bytez = image.read()
             book = Book(title=request.form['title'], authors=request.form['authors'],
-                        genre=request.form['genre'], year=request.form['year'])
+                        genre=request.form['genre'], year=request.form['year'], library_id=request.form['lib_id'])
             db.session.add(book)
             db.session.commit()
             flash('Book added successfully!')
-            return redirect(url_for('home'))
-    return render_template('addbook.html')
+            return redirect(url_for('library',id=request.form['lib_id']))
+    return render_template('addbook.html', libraries=libraries)
 
 
 @app.route('/logout')
