@@ -1,19 +1,92 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title> Upload Image </title>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>BookOrama</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+
+        <link href="{{url_for('static',filename='css/book.css')}}" rel="stylesheet" />
+<!--        <link href="{{url_for('static',filename='css/styles.css')}}" rel="stylesheet" />-->
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+
 </head>
-<body>
 
-<form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data" >
-    <label class="form-label" for="customFile">Upload Profile Image</label>
-    <br>
-    <input type="file" class="form-control" name="image" id="customFile" />
-    <br>
-    <button type="submit" class="btn btn-primary" > Upload </button>
+<body id="page-top">
 
-</form>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#page-top" style="color:black;">Book Orama</a>
+            </div>
+        </nav>
+
+<div id="make-3D-space" >
+    <div id="product-card">
+        <div id="product-front">
+        	<div class="shadow"></div>
+            <img src="{{ book_image }}" alt="" />
+            <div class="image_overlay"></div>
+            <div id="view_details">Synopis</div>
+            <div class="stats">
+                <div class="stats-container">
+                    <span class="product_price"></span>
+                    <span class="product_name" style="font-family: Open Sans, sans-serif;">{{book.title}}</span>
+                    <p style="font-family: Open Sans, sans-serif;">{{book.authors}}</p>
+                    <div class="product-options">
+                    <strong style="font-family: Open Sans, sans-serif;">{{book.genre}}</strong>
+                    <span style="font-family: Open Sans, sans-serif;">{{book.year}}</span>
+<!--                    <strong>COLORS</strong>-->
+<!--                    <div class="colors">-->
+<!--                        <div class="c-blue"><span></span></div>-->
+<!--                        <div class="c-red"><span></span></div>-->
+<!--                        <div class="c-white"><span></span></div>-->
+<!--                        <div class="c-green"><span></span></div>-->
+<!--                    </div>-->
+                </div>
+                </div>
+            </div>
+        </div>
+        <div id="product-back">
+	        <div class="shadow">
+
+            </div>
+            <div id="carousel">
+                <ul>
+                    <li>
+                        <img src="{{book_image}}" alt="" />
+                    </li>
+                    </ul>
+                <div class="arrows-perspective">
+                    <div class="carouselPrev">
+                        <div class="y"></div>
+	                    <div class="x"></div>
+                    </div>
+                    <div class="carouselNext">
+                        <div class="y"></div>
+	                    <div class="x"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="flip-back">
+            	<div id="cy"></div>
+                <div id="cx"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/book.js') }}"></script>
 
 </body>
+
 </html>
