@@ -1,8 +1,8 @@
-"""Library table
+"""profile pic image
 
-Revision ID: e21bb4848afa
+Revision ID: f5d2175e4930
 Revises: 
-Create Date: 2022-07-05 23:28:02.551349
+Create Date: 2022-07-10 16:39:48.842739
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e21bb4848afa'
+revision = 'f5d2175e4930'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,7 +24,7 @@ def upgrade():
     sa.Column('first_name', sa.String(length=64), nullable=True),
     sa.Column('last_name', sa.String(length=64), nullable=True),
     sa.Column('email', sa.String(length=120), nullable=True),
-    sa.Column('prof_data', sa.LargeBinary(), nullable=True),
+    sa.Column('profile_pic', sa.String(), nullable=True),
     sa.Column('password_hash', sa.String(length=128), nullable=True),
     sa.Column('about_me', sa.String(length=140), nullable=True),
     sa.Column('last_seen', sa.DateTime(), nullable=True),
