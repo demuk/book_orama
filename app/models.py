@@ -10,7 +10,7 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(64))
     email = db.Column(db.String(120), index=True, unique=True)
-    prof_data = db.Column(db.LargeBinary)
+    profile_pic = db.Column(db.String(), nullable=True, default='default.jpg')
     password_hash = db.Column(db.String(128))
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow())
@@ -46,6 +46,7 @@ class Book(db.Model):
     genre = db.Column(db.String(64))
     year = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    book_image = db.Column(db.String(), nullable=True)
     library_id = db.Column(db.Integer, db.ForeignKey('library.id'))
 
     def __repr__(self):
