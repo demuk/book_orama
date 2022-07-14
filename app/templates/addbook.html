@@ -50,12 +50,13 @@
               <div class="form-floating mb-3">
 
                 <select name="lib_id" class="form-select" aria-label="Default select example">
+                  
                       <option selected>Select Library</option>
                       {%for lib in libraries%}
                       <option value="{{lib.id}}">{{lib.name}}</option>
                       {%endfor%}
                      
-              </select>
+                </select>
 
               </div>
 

@@ -25,6 +25,7 @@ def home():
     return render_template('index.html', library=library)
 
 
+
 @app.route('/book/<int:id>')
 @login_required
 def book(id):
@@ -40,6 +41,17 @@ def library(id):
     count = Book.query.filter_by(library_id=id).count()
     user = User.query.all()
     return render_template('library.html', library=library, count=count)
+
+@app.route('/library_privacy/<int:id>')
+@login_required
+def library_privacy(id):
+    library = Library.query.get(id)
+    if library.library_cognito == 0:
+        library.library_cognito = 1
+    else :
+        library.library_cognito = 0
+    db.session.commit()
+    return redirect(url_for('library',id=id))
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -119,7 +131,8 @@ def add_lib():
         name = request.form['lib_name']
         location = request.form['lib_location']
         user_id = current_user.id
-        library = Library(name=name, location=location, user_id=current_user.id)
+        library_cognito = int(request.form['library_cognito'])
+        library = Library(name=name, location=location, user_id=current_user.id, library_cognito=library_cognito)
         db.session.add(library)
         db.session.commit()
         flash('library added successfully')

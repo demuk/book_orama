@@ -47,7 +47,7 @@
                     <div class="text-center">
                         <h1 class="mx-auto my-0 text-uppercase">BOOK ORAMA</h1>
                         <h2 class="text-white-50 mx-auto mt-2 mb-5">A collection of books.</h2>
-                        <a class="btn btn-primary" href="#about">Browse</a>
+                        <a class="btn btn-primary" href="{{url_for('add_lib')}}">Add Library</a>
                     </div>
                 </div>
             </div>
@@ -162,6 +162,7 @@
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5">
                     {% for lib in library %}
+                    {% if lib.library_cognito == 0%}
                     <div class="col-md-3 mb-3 mb-md-0">
                         <div class="card py-4 h-100">
                             <div class="card-body text-center">
@@ -177,6 +178,7 @@
                             </div>
                         </div>
                     </div>
+                    {%endif%}
                     {% endfor %}
                     <!-- <div class="col-md-4 mb-3 mb-md-0">
                         <div class="card py-4 h-100">

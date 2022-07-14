@@ -35,6 +35,7 @@ class Library(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     location = db.Column(db.String(255))
+    library_cognito = db.Column(db.Boolean())
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     books = db.relationship('Book', backref='library', lazy='dynamic')
 
@@ -46,6 +47,7 @@ class Book(db.Model):
     genre = db.Column(db.String(64))
     year = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    book_cognito = db.Column(db.Boolean())
     book_image = db.Column(db.String(), nullable=True)
     library_id = db.Column(db.Integer, db.ForeignKey('library.id'))
 
