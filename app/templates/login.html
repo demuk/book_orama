@@ -26,9 +26,6 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="#about">Your Library</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#projects">Features</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#signup">Contact</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Sign Up</a></li>
                     </ul>
@@ -54,7 +51,7 @@
             <!-- Background image for card set in CSS! -->
           </div>
           <div class="card-body p-4 p-sm-5">
-            <h5 class="card-title text-center mb-5 fw-light fs-5">Sign In</h5>
+            <h5 class="card-title text-center mb-5 fw-light fs-5">Please Sign In</h5>
     <form action="{{url_for('login')}}" method="post">
 
               <div class="form-floating mb-3">

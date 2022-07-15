@@ -161,25 +161,52 @@
         <section class="contact-section bg-black">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5">
-                    {% for lib in library %}
-                    {% if lib.library_cognito == 0%}
-                    <div class="col-md-3 mb-3 mb-md-0">
-                        <div class="card py-4 h-100">
-                            <div class="card-body text-center">
-                                <i class="fas fa-map-marked-alt text-primary mb-2"></i>
-                                
-                                <h4 class="text-uppercase m-0">{{lib.name}}</h4>
-                                
-                                <hr class="my-4 mx-auto" />
-                                <div class="small text-black-50">{{lib.location}}</div>
-                                  <div class="small text-black-50" >
-                                    <a  class="btn btn-success" href="{{url_for('library',id=lib.id)}}">Browse</a>
+                    {% for lib in current_user.libraries %}
+                     {%if lib.library_cognito==1%}
+                      <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="card py-4 h-100">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-map-marked-alt text-primary mb-2"></i>
+                                            
+                                            <h4 class="text-uppercase m-0">{{lib.name}}</h4>
+                                            
+                                            <hr class="my-4 mx-auto" />
+                                            <div class="small text-black-50">{{lib.location}}</div>
+                                            <br>
+                                              <div class="small text-black-50" >
+                                                <a  class="btn btn-success" href="{{url_for('library',id=lib.id)}}">Browse</a>
+                                                </div>
+                                        </div>
                                     </div>
-                            </div>
-                        </div>
-                    </div>
-                    {%endif%}
-                    {% endfor %}
+                                </div>
+                                {%endif%}
+                                {% endfor %}
+                            {%for libr in library %}
+                        {% if libr.library_cognito==0%}
+
+                            <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="card py-4 h-100">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-map-marked-alt text-primary mb-2"></i>
+                                            
+                                            <h4 class="text-uppercase m-0">{{libr.name}}</h4>
+                                            
+                                            <hr class="my-4 mx-auto" />
+                                            <div class="small text-black-50">{{libr.location}}</div>
+                                            <br>
+                                              <div class="small text-black-50" >
+                                                <a  class="btn btn-success" href="{{url_for('library',id=libr.id)}}">Browse</a>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                              
+                        
+
+                        {% endif %}
+                        {%endfor%}
+                    
                     <!-- <div class="col-md-4 mb-3 mb-md-0">
                         <div class="card py-4 h-100">
                             <div class="card-body text-center">

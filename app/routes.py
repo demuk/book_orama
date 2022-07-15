@@ -17,14 +17,16 @@ UPLOAD_FOLDER = 'app/static/img'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-@app.route('/')
 @app.route('/home')
 @login_required
 def home():
     library = Library.query.all()
-    return render_template('index.html', library=library)
+    private_lib=Library.query.filter_by(library_cognito=1)
+    return render_template('index.html', library=library,private_lib=private_lib)
 
-
+@app.route('/')
+def landing():
+    return render_template('landing.html')
 
 @app.route('/book/<int:id>')
 @login_required
