@@ -12,7 +12,6 @@ from werkzeug.utils import secure_filename
 import uuid as uuid
 import os
 import secrets
-import string
 
 UPLOAD_FOLDER = 'app/static/img'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -59,8 +58,6 @@ def library_privacy(id):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    alphabet = string.ascii_letters + string.digits
-    user_key = ''.join(secrets.choice(alphabet) for i in range(8))
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     if request.method == 'POST':
@@ -68,7 +65,7 @@ def register():
             image = request.files['image']
             bytez = image.read()
             user = User(username=request.form['username'], email=request.form['email'],
-                        password_hash=generate_password_hash(request.form['password']),user_key=user_key)
+                        password_hash=generate_password_hash(request.form['password']))
             db.session.add(user)
             db.session.commit()
             flash('Congratulations, you are now a registered user!')
@@ -126,7 +123,6 @@ def editprof(id):
             db.session.commit()
             flash('profile changed')
             return redirect(url_for('user', id=id))
-            
     return render_template('editprof.html', user=user, id=id)
 
 
