@@ -50,8 +50,10 @@
       <div class="d-flex flex-row justify-content-center align-items-center mt-3">
 <!--      <span class="number">1 <span class="follow">Followers</span></span>-->
     </div>
+     {%if current_user.id==user.id%}
       <div class=" d-flex mt-2"><a href="{{url_for('editprof',id=user.id)}}"><button class="btn1 btn-dark">Edit Profile</button></a>
     </div>
+    {%endif%}
       <div class="text mt-3">
           {% if user.about_me !='' %}
           <span>{{ user.about_me }}<br>
